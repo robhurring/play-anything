@@ -1,6 +1,6 @@
 # :musical_note: Play Anything
 
-Play anything is a web API that can be used to control spotify connect and allow strangers on the internet to control what you music you listen to.
+Play anything is a web API that uses spotify connect to grant strangers on the internet control what you listen to.
 
 
 ## Setup
