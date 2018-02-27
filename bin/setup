@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+say() {
+  echo "---> $*"
+}
+
+put() {
+  echo "     $*"
+}
+
+say "copying .env"
+if [ -f .env ]; then
+  put ".env exists, skipping"
+else
+  cp .env.example .env
+  put "created .env"
+fi
+
+say "installing dependencies"
+yarn install
+
+if [ $(command -v heroku) ]; then
+  say "setting up heroku"
+  heroku config:set NODE_ENV=production YARN_PRODUCTION=false
+else
+  say "heroku-cli not installed, skipping"
+fi

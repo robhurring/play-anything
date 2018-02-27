@@ -24,7 +24,7 @@ module.exports = {
   },
   plugins: [
     new NodemonPlugin({
-      watch: path.resolve("./public"),
+      watch: [".", "./public/assets"],
       script: "./server.js"
     })
   ]

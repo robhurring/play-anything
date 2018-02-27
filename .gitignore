@@ -3,3 +3,4 @@ public/assets
 yarn-error.log
 package-lock.json
 .env
+!.env.example
