@@ -13,14 +13,42 @@ function render({ props }) {
   let artistNames = "Unknown";
   let albumName = "Unknown";
   let duration = 0;
+  let listenUrl = null;
+  let previewUrl = null;
 
   if (!isEmptyObject(track)) {
     const album = track.album;
 
     trackName = track.name;
     duration = track.duration_ms;
-    artistNames = track.artists.map(artist => artist.name).join('&')
+    artistNames = track.artists.map(artist => artist.name).join("&");
     albumName = album.name;
+    listenUrl = track.external_urls.spotify;
+    previewUrl = track.preview_url;
+  }
+
+  let listen = <span />;
+  if (listenUrl) {
+    listen = (
+      <div class="text-muted mr-sm-5">
+        <span class="oi oi-audio mr-2" />
+        <a href={listenUrl} target="_blank">
+          Listen
+        </a>
+      </div>
+    );
+  }
+
+  let preview = <span />;
+  if (preview) {
+    preview = (
+      <div class="text-muted mr-sm-5">
+        <span class="oi oi-audio-spectrum mr-2" />
+        <a href={previewUrl} target="_blank">
+          Preview
+        </a>
+      </div>
+    );
   }
 
   return (
@@ -30,10 +58,14 @@ function render({ props }) {
         {artistNames} - {albumName}
       </p>
       <Progress value={progress} max={duration} />
-      <p class="text-muted">
-        <span class={`oi oi-media-${playing ? "play" : "stop"}`} />&nbsp;
-        {playing ? "Playing" : "Stopped"}
-      </p>
+      <div class="d-flex mb-3">
+        <div class="text-muted mr-sm-5">
+          <span class={`oi oi-media-${playing ? "play" : "stop"} mr-2`} />
+          {playing ? "Playing" : "Stopped"}
+        </div>
+        {listen}
+        {preview}
+      </div>
     </div>
   );
 }
