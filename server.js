@@ -4,7 +4,10 @@ const express = require("express"),
   static = require("serve-static"),
   morgan = require("morgan"),
   bodyParser = require("body-parser"),
-  player = require("./controllers/player");
+  session = require('express-session'),
+  db = require("./lib/db"),
+  spotify = require("./controllers/spotify"),
+  stats = require("./controllers/stats");
 
 const app = express();
 
@@ -18,9 +21,11 @@ if (process.env.NODE_ENV !== "production") {
 
 app.set("port", process.env.PORT || 3000);
 
+app.set("db", db.createDb(process.env.REDIS_URL));
+
 app.set("permissions", {
-  control: process.env.ENABLE_CONTROL==="true",
-  status: process.env.ENABLE_STATUS==="true"
+  control: process.env.ENABLE_CONTROL === "true",
+  status: process.env.ENABLE_STATUS === "true"
 });
 
 app.set("spotify.credentials", {
@@ -30,16 +35,37 @@ app.set("spotify.credentials", {
   refreshToken: process.env.SPOTIFY_REFRESH_TOKEN
 });
 
+app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
 app.use(bodyParser.json());
 app.use(static("public/", {}));
 
-app.use("/player/*", player.spotifyMiddleware);
+const permMiddleware = permission => {
+  return (req, res, next) => {
+    const perms = req.app.get("permissions");
 
-app.get("/player/next", [player.controlMiddleware], player.nextTrack);
-app.get("/player/prev", [player.controlMiddleware],player.previousTrack);
-app.get("/player/status", [player.statusMiddleware], player.status);
-app.put("/player/play", [player.controlMiddleware],player.play);
+    if (!perms[permission]) {
+      return res.status(400).json({
+        error: permission + " disabled"
+      });
+    }
+    next();
+  };
+};
 
-http.createServer(app).listen(app.get("port"), function() {
-  console.log("Express server listening on port " + app.get("port"));
+app.use("*", (req, res, next) => {
+  const db = req.app.get("db");
+  const id = req.session.id;
+
+  db.addClient(id);
+  next();
+});
+
+app.use("/player/*", spotify.apiMiddleware);
+app.get("/player/status", [permMiddleware("status")], spotify.status);
+app.put("/player/play", [permMiddleware("control")], spotify.play);
+
+app.get("/stats", stats.stats);
+
+http.createServer(app).listen(app.get("port"), () => {
+  console.log(`Express server listening on port ${app.get("port")}`);
 });
