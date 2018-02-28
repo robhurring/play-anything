@@ -28,7 +28,23 @@ export default class Api {
     };
 
     return fetch("/player/play", opts).then(res => {
-      return res
+      return res;
     });
+  }
+
+  search(term) {
+    const query = Api.buildQuery({
+      q: term
+    });
+
+    return fetch(`/player/search?${query}`).then(res => {
+      return res.json();
+    });
+  }
+
+  static buildQuery(params) {
+    return Object.keys(params)
+      .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+      .join("&");
   }
 }

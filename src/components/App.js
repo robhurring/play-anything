@@ -1,7 +1,9 @@
 import { element } from "deku";
-import Stats from "./Stats.js";
-import Player from "./player/Player.js";
 import styles from "../main.css";
+
+import Stats from "./Stats";
+import Player from "./player/Player";
+import Search from "./search/Search";
 
 const TITLE = "Play Anything";
 
@@ -18,6 +20,7 @@ function render({ props }) {
 
       <main class="container">
         <Player />
+        <Search />
       </main>
 
       <footer class="footer">

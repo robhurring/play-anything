@@ -75,9 +75,14 @@ exports.play = (req, res) => {
 exports.search = (req, res) => {
   const q = req.query.q;
 
+  console.log(`search=${q}`)
+
   req.spotify.searchTracks(q).then(
     data => {
-      res.status(200).json(data);
+      const results = data.body.tracks.items
+      res.status(200).json({
+        results: results
+      });
     },
     err => {
       console.error(err);
