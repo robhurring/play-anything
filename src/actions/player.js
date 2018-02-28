@@ -1,4 +1,4 @@
-import Api from "./api";
+import Api from "../api";
 
 const api = new Api();
 
@@ -8,43 +8,9 @@ export const STATUS = {
   error: "error"
 };
 
-export const GET_STATS = "GET_STATS";
 export const PLAYER_STATUS = "PLAYER_STATUS";
 export const PLAYER_PROGRESS = "PLAYER_PROGRESS";
-export const PLAY = "PLAY";
-export const APP_STARTED = "APP_STARTED";
-
-export function appStarted(dispatch) {
-  dispatch({
-    type: APP_STARTED
-  });
-}
-
-export function getStats(dispatch) {
-  return () => {
-    dispatch({
-      type: GET_STATS,
-      status: STATUS.started
-    });
-
-    api
-      .getStats()
-      .then(stats => {
-        dispatch({
-          type: GET_STATS,
-          status: STATUS.success,
-          stats
-        });
-      })
-      .catch(err => {
-        dispatch({
-          type: GET_STATS,
-          status: STATUS.error,
-          error: err.toString()
-        });
-      });
-  };
-}
+export const PLAYER_PLAY = "PLAYER_PLAY";
 
 export function getPlayerStatus(dispatch) {
   return () => {
@@ -84,7 +50,7 @@ export function updateProgress(dispatch) {
 export function play(dispatch) {
   return uri => {
     dispatch({
-      type: PLAY,
+      type: PLAYER_PLAY,
       status: STATUS.started
     });
 
@@ -92,7 +58,7 @@ export function play(dispatch) {
       .play(uri)
       .then(json => {
         dispatch({
-          type: PLAY,
+          type: PLAYER_PLAY,
           status: STATUS.success
         });
 
@@ -101,10 +67,11 @@ export function play(dispatch) {
       })
       .catch(err => {
         dispatch({
-          type: PLAY,
+          type: PLAYER_PLAY,
           status: STATUS.error,
           error: err.toString()
         });
       });
   };
 }
+

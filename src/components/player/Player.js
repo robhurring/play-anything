@@ -1,5 +1,5 @@
 import { element } from "deku";
-import { getPlayerStatus, play } from "../../actions";
+import { getPlayerStatus, play } from "../../actions/player";
 import { isEmptyObject } from "../../util";
 import AlbumImage from "./AlbumImage";
 import Status from "./Status";

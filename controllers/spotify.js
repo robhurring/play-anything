@@ -71,3 +71,19 @@ exports.play = (req, res) => {
     }
   );
 };
+
+exports.search = (req, res) => {
+  const q = req.query.q;
+
+  req.spotify.searchTracks(q).then(
+    data => {
+      res.status(200).json(data);
+    },
+    err => {
+      console.error(err);
+      res.status(500).json({
+        error: err
+      });
+    }
+  );
+};

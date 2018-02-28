@@ -2,12 +2,14 @@ import { element, createApp } from "deku";
 import { combineReducers, createStore } from "redux";
 import statsReducer from "./reducers/stats";
 import playerReducer from "./reducers/player";
+import searchReducer from "./reducers/search";
 import App from "./components/App";
 
 const store = createStore(
   combineReducers({
     stats: statsReducer,
-    player: playerReducer
+    player: playerReducer,
+    search: searchReducer
   })
 );
 

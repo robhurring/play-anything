@@ -63,6 +63,7 @@ app.use("*", (req, res, next) => {
 app.use("/player/*", spotify.apiMiddleware);
 app.get("/player/status", [permMiddleware("status")], spotify.status);
 app.put("/player/play", [permMiddleware("control")], spotify.play);
+app.get("/player/search", spotify.search);
 
 app.get("/stats", stats.stats);
 

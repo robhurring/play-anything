@@ -1,4 +1,4 @@
-import { GET_STATS, STATUS } from "../actions";
+import { STATS, STATUS } from "../actions/stats";
 import { merge } from "../util";
 
 const initial = {
@@ -6,16 +6,21 @@ const initial = {
 };
 
 export default function statsReducer(state = initial, action) {
-  if (action.type === GET_STATS) {
-    switch (action.status) {
-      case STATUS.started:
-        return state
-      case STATUS.success:
-        return merge(state, action.stats)
-      case STATUS.error:
-        return merge(state, {error: action.error})
-    }
+  switch (action.type) {
+    case STATS:
+      return handleStats(state, action)
+    default:
+      return state;
   }
-
-  return state;
 }
+
+const handleStats = (state, action) => {
+  switch (action.status) {
+    case STATUS.started:
+      return state;
+    case STATUS.success:
+      return merge(state, action.stats);
+    case STATUS.error:
+      return merge(state, { error: action.error });
+  }
+};

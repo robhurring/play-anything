@@ -1,4 +1,4 @@
-import { PLAYER_STATUS, PLAYER_PROGRESS, PLAY, STATUS } from "../actions";
+import { PLAYER_STATUS, PLAYER_PROGRESS, PLAYER_PLAY, STATUS } from "../actions/player";
 import { merge } from "../util";
 
 const initial = {
@@ -15,7 +15,7 @@ export default function spotifyReducer(state = initial, action) {
       return merge(state, {
         progress_ms: state.progress_ms + action.increment
       });
-    case PLAY:
+    case PLAYER_PLAY:
       return handlePlay(state, action);
     default:
       return state;

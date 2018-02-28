@@ -1,5 +1,5 @@
 import { element } from "deku";
-import { getStats } from "../actions";
+import { getStats } from "../actions/stats";
 
 let timeout = 5000;
 let ticker;

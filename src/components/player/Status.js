@@ -1,6 +1,6 @@
 import { element } from "deku";
 import { isEmptyObject } from "../../util";
-import { updateProgress } from "../../actions";
+import { updateProgress } from "../../actions/player";
 import Progress from "./Progress";
 
 let PROGRESS_TIMEOUT = 1000;
