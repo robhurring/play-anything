@@ -10,6 +10,7 @@ import differ from "deep-diff";
 import App from "./components/App";
 
 const SYSTEM_STATUS_TIMEOUT = 2500;
+
 const store = createStore(
   combineReducers({
     system: systemReducer,
@@ -60,3 +61,4 @@ observeStore(store, state => {
 });
 
 getStatus(store.dispatch)();
+startSystemPoller();
