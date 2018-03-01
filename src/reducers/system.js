@@ -4,7 +4,7 @@ import { merge } from "../util";
 const initial = {
   id: '',
   clients: 0,
-  online: true
+  online: false
 };
 
 export default function systemReducer(state = initial, action) {

@@ -3,8 +3,22 @@ import { isEmptyObject } from "../../util";
 import { updateProgress } from "../../actions/player";
 import Progress from "./Progress";
 
-let PROGRESS_TIMEOUT = 1000;
+const PROGRESS_TIMEOUT = 1000;
 let progressTicker = null;
+
+const startProgressTicker = dispatch => {
+  if (!progressTicker) {
+    progressTicker = setInterval(() => {
+      updateProgress(dispatch)(PROGRESS_TIMEOUT);
+    }, PROGRESS_TIMEOUT);
+  }
+};
+
+const stopProgressTicker = () => {
+  if (progressTicker) {
+    clearInterval(progressTicker);
+  }
+};
 
 function render({ props }) {
   let { playing, progress, track } = props;
@@ -71,15 +85,11 @@ function render({ props }) {
 }
 
 function onCreate({ props, dispatch }) {
-  // progressTicker = setInterval(() => {
-  //   updateProgress(dispatch)(PROGRESS_TIMEOUT);
-  // }, PROGRESS_TIMEOUT);
+  startProgressTicker(dispatch);
 }
 
 function onRemove() {
-  if (progressTicker) {
-    clearInterval(progressTicker);
-  }
+  stopProgressTicker();
 }
 
 export default {

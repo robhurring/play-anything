@@ -5,8 +5,24 @@ import AlbumImage from "./AlbumImage";
 import Status from "./Status";
 import PlayForm from "./PlayForm";
 
-const STATUS_TIMEOUT = 10000;
-let statusTicker = null;
+const PLAYER_STATUS_TIMEOUT = 5000;
+let playerPoller = null;
+
+const startPlayerPoller = dispatch => {
+  if (!playerPoller) {
+    console.log("---> starting player status poller");
+    playerPoller = setInterval(() => {
+      getPlayerStatus(dispatch)();
+    }, PLAYER_STATUS_TIMEOUT);
+  }
+};
+
+const stopPlayerPoller = () => {
+  if (playerPoller) {
+    console.log("---> stopping player status poller");
+    clearInterval(playerPoller);
+  }
+};
 
 function render({ props, dispatch, context }) {
   const { player } = context;
@@ -34,16 +50,12 @@ function render({ props, dispatch, context }) {
 }
 
 function onCreate({ props, dispatch }) {
-  const updateStatus = getPlayerStatus(dispatch);
-
-  updateStatus();
-  statusTicker = setInterval(updateStatus, STATUS_TIMEOUT);
+  getPlayerStatus(dispatch)();
+  startPlayerPoller(dispatch);
 }
 
 function onRemove() {
-  if (statusTicker) {
-    clearInterval(statusTicker);
-  }
+  stopPlayerPoller();
 }
 
 export default {

@@ -10,8 +10,6 @@ const TITLE = "Play Anything";
 function render({ props, context }) {
   const { system } = context;
 
-  console.log('system', system);
-
   let content = "";
   if (system.online) {
     content = (
