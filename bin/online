@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# vim: ft=sh
+
+source .env
+curl -i -H "Authorization: Token ${PASSWORD}" localhost:3000/system/online

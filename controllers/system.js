@@ -1,3 +1,25 @@
+exports.passwordProtected = (req, res, next) => {
+  const password = req.app.get("password")
+  const authorization = req.headers.authorization;
+
+  const fail = (message = 'Unauthorized') => {
+    res.status(401).json({
+      error: message
+    })
+  }
+
+  if (!authorization) {
+    return fail()
+  }
+
+  const token = authorization.replace(/^Token\s*/, '')
+  if (token === password) {
+    next()
+  } else {
+    fail('Incorrect password')
+  }
+}
+
 exports.offlineMiddleware = (req, res, next) => {
   const db = req.app.get("db");
   const defaultOnlineStatus = req.app.get("online by default");

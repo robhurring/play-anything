@@ -4,7 +4,8 @@ const express = require("express"),
   static = require("serve-static"),
   morgan = require("morgan"),
   bodyParser = require("body-parser"),
-  session = require('express-session'),
+  session = require("express-session"),
+  uuid = require("uuid/v4"),
   db = require("./lib/db"),
   spotify = require("./controllers/spotify"),
   system = require("./controllers/system");
@@ -22,7 +23,8 @@ if (process.env.NODE_ENV !== "production") {
 app.set("port", process.env.PORT || 3000);
 
 app.set("db", db.createDb(process.env.REDIS_URL));
-app.set("online by default", process.env.ONLINE === "online")
+app.set("online by default", process.env.ONLINE === "online");
+app.set("password", process.env.PASSWORD || uuid());
 
 app.set("permissions", {
   control: process.env.ENABLE_CONTROL === "true",
@@ -36,7 +38,7 @@ app.set("spotify.credentials", {
   refreshToken: process.env.SPOTIFY_REFRESH_TOKEN
 });
 
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+app.use(session({ secret: "keyboard cat", cookie: { maxAge: 60000 } }));
 app.use(bodyParser.json());
 app.use(static("public/", {}));
 
@@ -62,8 +64,8 @@ app.use("*", (req, res, next) => {
 });
 
 app.get("/system/status", system.status);
-app.get("/system/offline", system.state("offline"));
-app.get("/system/online", system.state("online"));
+app.get("/system/offline", [system.passwordProtected], system.state("offline"));
+app.get("/system/online", [system.passwordProtected], system.state("online"));
 
 app.use("/player/*", system.offlineMiddleware, spotify.apiMiddleware);
 app.get("/player/status", [permMiddleware("status")], spotify.status);
