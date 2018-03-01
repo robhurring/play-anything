@@ -2,7 +2,7 @@ import Api from "../api";
 
 const api = new Api();
 
-export const STATS = "STATS";
+export const SYSTEM_STATUS = "SYSTEM_STATUS";
 
 export const STATUS = {
   started: "started",
@@ -10,25 +10,25 @@ export const STATUS = {
   error: "error"
 };
 
-export function getStats(dispatch) {
+export function getStatus(dispatch) {
   return () => {
     dispatch({
-      type: STATS,
+      type: SYSTEM_STATUS,
       status: STATUS.started
     });
 
     api
-      .getStats()
-      .then(stats => {
+      .getStatus()
+      .then(status => {
         dispatch({
-          type: STATS,
+          type: SYSTEM_STATUS,
           status: STATUS.success,
-          stats
+          system_status: status
         });
       })
       .catch(err => {
         dispatch({
-          type: STATS,
+          type: SYSTEM_STATUS,
           status: STATUS.error,
           error: err.toString()
         });

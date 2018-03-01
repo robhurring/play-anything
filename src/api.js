@@ -1,8 +1,8 @@
 import fetch from "cross-fetch";
 
 export default class Api {
-  getStats() {
-    return fetch("/stats").then(res => {
+  getStatus() {
+    return fetch("/system/status").then(res => {
       return res.json();
     });
   }

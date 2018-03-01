@@ -71,9 +71,9 @@ function render({ props }) {
 }
 
 function onCreate({ props, dispatch }) {
-  progressTicker = setInterval(() => {
-    updateProgress(dispatch)(PROGRESS_TIMEOUT);
-  }, PROGRESS_TIMEOUT);
+  // progressTicker = setInterval(() => {
+  //   updateProgress(dispatch)(PROGRESS_TIMEOUT);
+  // }, PROGRESS_TIMEOUT);
 }
 
 function onRemove() {

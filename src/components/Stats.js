@@ -1,23 +1,23 @@
 import { element } from "deku";
-import { getStats } from "../actions/stats";
+import { getStatus } from "../actions/system";
 
 let timeout = 5000;
 let ticker;
 
 function render({ props, context }) {
-  const { stats } = context;
+  const { system } = context;
 
   return (
     <div class="container">
       <p class="text-muted text-right">
-        {stats.clients} clients
+        {system.clients} clients
       </p>
     </div>
   );
 }
 
 function onCreate({ props, dispatch }) {
-  const statusFunc = getStats(dispatch);
+  const statusFunc = getStatus(dispatch);
   statusFunc();
   ticker = setInterval(statusFunc, timeout);
 }

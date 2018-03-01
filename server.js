@@ -7,7 +7,7 @@ const express = require("express"),
   session = require('express-session'),
   db = require("./lib/db"),
   spotify = require("./controllers/spotify"),
-  stats = require("./controllers/stats");
+  system = require("./controllers/system");
 
 const app = express();
 
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV !== "production") {
 app.set("port", process.env.PORT || 3000);
 
 app.set("db", db.createDb(process.env.REDIS_URL));
+app.set("online by default", process.env.ONLINE === "online")
 
 app.set("permissions", {
   control: process.env.ENABLE_CONTROL === "true",
@@ -60,12 +61,14 @@ app.use("*", (req, res, next) => {
   next();
 });
 
-app.use("/player/*", spotify.apiMiddleware);
+app.get("/system/status", system.status);
+app.get("/system/offline", system.state("offline"));
+app.get("/system/online", system.state("online"));
+
+app.use("/player/*", system.offlineMiddleware, spotify.apiMiddleware);
 app.get("/player/status", [permMiddleware("status")], spotify.status);
 app.put("/player/play", [permMiddleware("control")], spotify.play);
 app.get("/player/search", spotify.search);
-
-app.get("/stats", stats.stats);
 
 http.createServer(app).listen(app.get("port"), () => {
   console.log(`Express server listening on port ${app.get("port")}`);

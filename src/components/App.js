@@ -7,21 +7,32 @@ import Search from "./search/Search";
 
 const TITLE = "Play Anything";
 
-function render({ props }) {
+function render({ props, context }) {
+  const { system } = context;
+
+  console.log('system', system);
+
+  let content = "";
+  if (system.online) {
+    content = (
+      <div>
+        <Player />
+        <Search />
+      </div>
+    );
+  } else {
+    content = <div>Offline</div>;
+  }
+
   return (
     <div>
       <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-          <div class="navbar-brand">
-            {TITLE}
-          </div>
+          <div class="navbar-brand">{TITLE}</div>
         </nav>
       </header>
 
-      <main class="container">
-        <Player />
-        <Search />
-      </main>
+      <main class="container">{content}</main>
 
       <footer class="footer">
         <Stats />
